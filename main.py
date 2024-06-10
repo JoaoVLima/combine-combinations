@@ -1,21 +1,62 @@
 import itertools
+import time
+from functools import wraps
 
 
+def convert_nanoseconds(ns):
+    # Constants for time conversions
+    ns_per_us = 1_000
+    ns_per_ms = 1_000_000
+    ns_per_s = 1_000_000_000
+    ns_per_min = 60 * ns_per_s
+    ns_per_hour = 60 * ns_per_min
+
+    if ns < ns_per_us:
+        return f"{ns}ns"
+    elif ns < ns_per_ms:
+        us = ns / ns_per_us
+        return f"{us:.3f}us"
+    elif ns < ns_per_s:
+        ms = ns / ns_per_ms
+        return f"{ms:.3f}ms"
+    elif ns < ns_per_min:
+        s = ns / ns_per_s
+        return f"{s:.3f}s"
+    elif ns < ns_per_hour:
+        minutes = ns // ns_per_min
+        seconds = (ns % ns_per_min) // ns_per_s
+        return f"{minutes}m {seconds}s"
+    else:
+        hours = ns // ns_per_hour
+        minutes = (ns % ns_per_hour) // ns_per_min
+        seconds = (ns % ns_per_min) // ns_per_s
+        return f"{hours}h {minutes}m {seconds}s"
+
+
+def timer_ns(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        print(f"Executing Function '{func.__name__}'...")
+        start_time = time.perf_counter_ns()
+        result = func(*args, **kwargs)
+        end_time = time.perf_counter_ns()
+        elapsed_time = end_time - start_time
+        print(f"Executing Function '{func.__name__}' took {convert_nanoseconds(elapsed_time)} to complete")
+        return result
+
+    return wrapper
+
+
+@timer_ns
 def combinations(n, p):
-    porcentagens = {}
-    n_combinacoes = n_combinations(n, p)
-    porcentagens['n_combinacoes'] = n_combinacoes
-    numero_iniciador = 1
-    acc = 0
-    porcentagens[numero_iniciador] = acc
-    for combination in generate_combinations(list(range(1, n+1)), p):
-        if numero_iniciador != combination[0]:
-            porcentagens[numero_iniciador] = (porcentagens[numero_iniciador] / n_combinacoes) * 100
-            numero_iniciador = combination[0]
-            porcentagens[numero_iniciador] = acc
-        porcentagens[numero_iniciador] += 1
-
-    return porcentagens
+    result = {}
+    result['size'] = n_combinations(n, p)
+    for combination in generate_combinations(list(range(1, n + 1)), p):
+        first_10 = str(combination[0:10])
+        if first_10 not in result:
+            result[first_10] = []
+        result[first_10].append(combination)
+    return result
 
 
 def next_combination(comb, n, p):
@@ -34,6 +75,7 @@ def next_combination(comb, n, p):
     for j in range(i + 1, p):
         comb[j] = comb[j - 1] + 1
     return True
+
 
 # Ordem Lexicografica
 def generate_combinations(N, p):
@@ -65,17 +107,59 @@ def n_combinations(n, p):
     return factorial(n) / (factorial(p) * factorial(n - p))
 
 
-def main():
-    n = 25
-    p = 15
+def subset(s1, s2):
+    result = []
 
-    import time
-    a = time.time_ns()
-    print(combinations(25, 15))
-    print('TEMPO - ', time.time_ns()-a)
-    a = time.time_ns()
-    list(itertools.combinations(list(range(1, 26)), 15))
-    print('TEMPO - ', time.time_ns()-a)
+    # Percorre cada lista em s1
+    for sublist1 in s1:
+        for sublist2 in s2:
+            # Verifica se todos os elementos de sublist2 estão em sublist1
+            if all(elem in sublist1 for elem in sublist2):
+                result.append(sublist1)
+                break
+
+    return result
+
+
+@timer_ns
+def find_subsets(dict1, dict2):
+    result_dict = {}
+    result_dict['size'] = 0
+
+    # Itera sobre cada chave em dict1
+    for key in dict1:
+        if key in dict2 and key != 'size':
+            s1_lists = dict1[key]
+            s2_lists = dict2[key]
+            # Chama a função subset para as listas correspondentes e armazena o resultado
+            result_dict[key] = subset(s1_lists, s2_lists)
+            result_dict['size'] += len(result_dict[key])
+
+    return result_dict
+
+
+def main():
+    s15 = combinations(25, 15)
+    print(f"s15: {s15['size']}")
+    s14 = combinations(25, 14)
+    print(f"s14: {s14['size']}")
+    s13 = combinations(25, 13)
+    print(f"s13: {s13['size']}")
+    s12 = combinations(25, 12)
+    print(f"s12: {s12['size']}")
+    s11 = combinations(25, 11)
+    print(f"s11: {s11['size']}")
+
+    sb15_14 = find_subsets(s15, s14)
+    print(f"sb15_14: {sb15_14['size']}")
+    sb15_13 = find_subsets(s15, s13)
+    print(f"sb15_13: {sb15_13['size']}")
+    sb15_12 = find_subsets(s15, s12)
+    print(f"sb15_12: {sb15_12['size']}")
+    sb15_11 = find_subsets(s15, s11)
+    print(f"sb15_11: {sb15_11['size']}")
+
+    print(f"lotofacil: R$ {sum([sb15_14['size'],sb15_13['size'],sb15_12['size'],sb15_11['size']])*3}")
 
 
 if __name__ == '__main__':
