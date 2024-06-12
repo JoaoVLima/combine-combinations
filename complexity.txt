@@ -1,0 +1,166 @@
+1 #Desconsidera
+1 #Desconsidera
+1 #Desconsidera
+
+
+def convert_nanoseconds(ns):
+    #
+    1
+    1
+    1
+    1
+    1
+
+    1
+        1
+    1
+        1
+        1
+    1
+        1
+        1
+    1
+        1
+        1
+    1
+        1
+        1
+        1
+    1
+        1
+        1
+        1
+        1 # Soma = 25
+
+
+def timer_ns(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        1
+        1
+        1
+        1
+        1
+        1
+        1
+
+    1 # Soma = 8
+
+
+@timer_ns
+def combinations(n, p):
+    1
+    1 n_combinations(n, p) = (n! / p! * (n-p)!)
+    n_combinations + 1
+        n_combinations
+        n_combinations
+            n_combinations
+        n_combinations
+    1 # Soma = 5 * n_combinations + 4
+
+
+def next_combination(comb, n, p):
+    #
+    p + 1
+        #
+        p
+            p
+    1
+        #
+        1
+
+    #
+    1
+    #
+    p + 1
+        p
+    1 # Soma = 5 * p + 6
+
+
+#
+def generate_combinations(N, p):
+    #
+    1
+    #
+    1
+        1
+
+    1
+    n_combinations + 1
+        #
+        n_combinations
+        #
+        n_combinations next_combination(comb, n, p)
+            n_combinations # Soma = 4 * n_combinations + 5 + (n_combinations * next_combination(comb, n, p))
+
+
+def factorial(n):
+    #
+    1
+    n + 1
+        n
+    1 # Soma = 2 * n + 3
+
+
+def n_combinations(n, p):
+    #
+    1 factorial(n) / (factorial(p) * factorial(n - p))
+
+
+def subset(s1, s2):
+    1
+
+    #
+    p + 1
+        p * p + 1
+            #
+            p * p
+                p * p
+                p * p
+
+    1 # Soma = 4 * (p * p) + p + 4
+
+
+@timer_ns
+def find_subsets(dict1, dict2):
+    1
+    1
+
+    #
+    n_combinations + 1
+        n_combinations
+            n_combinations
+            n_combinations
+            #
+            n_combinations subset(s1_lists, s2_lists)
+            n_combinations
+
+    1 # Soma = 6 * n_combinations + 4 + (n_combinations * subset(s1_lists, s2_lists))
+
+#Desconsidera
+def main():
+    1
+    1
+    1
+    1
+    1
+    1
+    1
+    1
+    1
+    1
+
+    1
+    1
+    1
+    1
+    1
+    1
+    1
+    1
+
+    1 # Soma = 19
+
+
+1 #Desconsidera
+    1 #Desconsidera

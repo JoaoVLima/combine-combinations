@@ -48,7 +48,7 @@ def timer_ns(func):
 
 
 @timer_ns
-def combinations(n, p):
+def combinations_dict(n, p):
     result = {}
     result['size'] = n_combinations(n, p)
     for combination in generate_combinations(list(range(1, n + 1)), p):
@@ -56,6 +56,14 @@ def combinations(n, p):
         if first_10 not in result:
             result[first_10] = []
         result[first_10].append(combination)
+    return result
+
+
+@timer_ns
+def combinations(n, p):
+    result = []
+    for combination in generate_combinations(list(range(1, n + 1)), p):
+        result.append(combination)
     return result
 
 
@@ -115,14 +123,14 @@ def subset(s1, s2):
         for sublist2 in s2:
             # Verifica se todos os elementos de sublist2 estão em sublist1
             if all(elem in sublist1 for elem in sublist2):
-                result.append(sublist1)
+                result.append(sublist2)
                 break
 
     return result
 
 
 @timer_ns
-def find_subsets(dict1, dict2):
+def find_subsets_dict(dict1, dict2):
     result_dict = {}
     result_dict['size'] = 0
 
@@ -138,28 +146,69 @@ def find_subsets(dict1, dict2):
     return result_dict
 
 
+def list_to_dict(lista):
+    result_dict = {}
+    for sublist in lista:
+        first_10 = ','.join(list(map(str,sublist[0:1])))
+        if first_10 not in result_dict:
+            result_dict[first_10] = []
+        result_dict[first_10].append(sublist)
+    return result_dict
+
+
+@timer_ns
+def find_subsets(list1, list2):
+    dict1 = list_to_dict(list1)
+    dict2 = list_to_dict(list2)
+    result = []
+    # Itera sobre cada chave em dict1
+    for key in dict1:
+        if key in dict2 and key != 'size':
+            s1_lists = dict1[key]
+            s2_lists = dict2[key]
+            # Chama a função subset para as listas correspondentes e armazena o resultado
+            result += subset(s1_lists, s2_lists)
+
+    return result
+
+
 def main():
-    s15 = combinations(25, 15)
-    print(f"s15: {s15['size']}")
-    s14 = combinations(25, 14)
-    print(f"s14: {s14['size']}")
-    s13 = combinations(25, 13)
-    print(f"s13: {s13['size']}")
-    s12 = combinations(25, 12)
-    print(f"s12: {s12['size']}")
-    s11 = combinations(25, 11)
-    print(f"s11: {s11['size']}")
 
-    sb15_14 = find_subsets(s15, s14)
-    print(f"sb15_14: {sb15_14['size']}")
-    sb15_13 = find_subsets(s15, s13)
-    print(f"sb15_13: {sb15_13['size']}")
-    sb15_12 = find_subsets(s15, s12)
-    print(f"sb15_12: {sb15_12['size']}")
-    sb15_11 = find_subsets(s15, s11)
-    print(f"sb15_11: {sb15_11['size']}")
+    a = combinations(25, 15)
+    b = combinations(6, 2)
 
-    print(f"lotofacil: R$ {sum([sb15_14['size'],sb15_13['size'],sb15_12['size'],sb15_11['size']])*3}")
+    print()
+
+    # s15 = combinations(25, 15)
+    # s15_size = len(s15)
+    # print(f"s15: {s15_size}")
+    # s14 = combinations(25, 14)
+    # s14_size = len(s14)
+    # print(f"s14: {s14_size}")
+    # s13 = combinations(25, 13)
+    # s13_size = len(s13)
+    # print(f"s13: {s13_size}")
+    # s12 = combinations(25, 12)
+    # s12_size = len(s12)
+    # print(f"s12: {s12_size}")
+    # s11 = combinations(25, 11)
+    # s11_size = len(s11)
+    # print(f"s11: {s11_size}")
+    #
+    # sb15_14 = find_subsets(s15, s14)
+    # sb15_14_size = len(sb15_14)
+    # print(f"sb15_14: {sb15_14_size}")
+    # sb15_13 = find_subsets(s15, s13)
+    # sb15_13_size = len(sb15_13)
+    # print(f"sb15_13: {sb15_13_size}")
+    # sb15_12 = find_subsets(s15, s12)
+    # sb15_12_size = len(sb15_12)
+    # print(f"sb15_12: {sb15_12_size}")
+    # sb15_11 = find_subsets(s15, s11)
+    # sb15_11_size = len(sb15_11)
+    # print(f"sb15_11: {sb15_11_size}")
+    #
+    # print(f"lotofacil: R$ {sum([sb15_14_size, sb15_13_size, sb15_12_size, sb15_11_size]) * 3}")
 
 
 if __name__ == '__main__':
